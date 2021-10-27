@@ -11,13 +11,13 @@ module async_fifo_memory
     )
   (
    // Memory write port control and data signals
-   input logic 				  w_clk, // write clock
-   input logic 				  w_en, // enable memory
-   input logic [MEMORY_WIDTH-1:0] 	  w_data, // write data
-   input logic [$clog2(MEMORY_DEPTH)-1:0] w_addr, // write address
+   input logic 				  write_clk, // write clock
+   input logic 				  write_en, // enable memory
+   input logic [MEMORY_WIDTH-1:0] 	  write_data, // write data
+   input logic [$clog2(MEMORY_DEPTH)-1:0] write_addr, // write address
    // Memory read port control and data signals
-   input logic [$clog2(MEMORY_DEPTH)-1:0] r_addr, // read address
-   output logic [MEMORY_WIDTH-1:0] 	  r_data // read data
+   input logic [$clog2(MEMORY_DEPTH)-1:0] read_addr, // read address
+   output logic [MEMORY_WIDTH-1:0] 	  read_data // read data
    );
 
   // Defining the memory
@@ -25,14 +25,14 @@ module async_fifo_memory
 
   // Reset is not present to minimize area
   // Writing to the memory
-  always @(posedge w_clk) begin
-    if (w_en) begin
-      memory[w_addr] <= w_data;      
+  always @(posedge write_clk) begin
+    if (write_en) begin
+      memory[write_addr] <= write_data;      
     end    
   end
 
   // Reading from the memory
   // Should read 'X' is memory location is not previously written to
-  assign r_data = memory[r_addr];
+  assign read_data = memory[read_addr];
 
 endmodule

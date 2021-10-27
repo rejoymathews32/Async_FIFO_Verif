@@ -7,26 +7,26 @@
 
 module async_fifo_gcode_counter
   #(
-    parameter COUNTER_SIZE = 4
+    parameter COUNTER_BITS = 4
     )
   (
    input logic 			   counter_incr, // control signal to increament the counter
    input logic 			   counter_en, // control signal to enable the counter
    input logic 			   clk, // clock
    input logic 			   reset_n // reset
-   output logic [COUNTER_SIZE-2:0] memory_addr, // memory access address
-   output logic [COUNTER_SIZE-1:0] gcode_ptr // grey code pointer
+   output logic [COUNTER_BITS-2:0] memory_addr, // memory access address
+   output logic [COUNTER_BITS-1:0] gcode_ptr // grey code pointer
    );
 
   // Counter register
-  logic [COUNTER_SIZE-1:0] 	   counter_binary;
-  logic [COUNTER_SIZE-1:0] 	   counter_binary_next;
-  logic [COUNTER_SIZE-1:0] 	   counter_greycode;
-  logic [COUNTER_SIZE-1:0] 	   counter_greycode_next;
+  logic [COUNTER_BITS-1:0] 	   counter_binary;
+  logic [COUNTER_BITS-1:0] 	   counter_binary_next;
+  logic [COUNTER_BITS-1:0] 	   counter_greycode;
+  logic [COUNTER_BITS-1:0] 	   counter_greycode_next;
   
   // Exclude the MSB for memory_addr.
   // The MSB is used for full/empty check in the other clk domain
-  assign memory_addr = counter_binary[COUNTER_SIZE-2:0];
+  assign memory_addr = counter_binary[COUNTER_BITS-2:0];
   assign gcode_ptr = counter_greycode;
 
   //----------------------------------------------------------------------------
@@ -46,14 +46,14 @@ module async_fifo_gcode_counter
   // Instantiate a binary to greycode converter
  /* async_fifo_bintogcode AUTO_TEMPLATE
   (
-    .SIGNAL_WIDTH			(COUNTER_SIZE),
+    .SIGNAL_WIDTH			(COUNTER_BITS),
     .\(.*\)                             (counter_\1_next),
   ); */
  async_fifo_bintogcode
   #(
     /*AUTOINSTPARAM*/
     // Parameters
-    .SIGNAL_WIDTH			(COUNTER_SIZE))		 // Templated
+    .SIGNAL_WIDTH			(COUNTER_BITS))		 // Templated
   u_bintogcode
   (
     /*AUTOINST*/
@@ -95,13 +95,13 @@ module async_fifo_gcode_counter
   // flopped binary value
 `ifdef ASSERT_ON
 
-  logic [COUNTER_SIZE-1:0] 	   counter_greycode_model;
+  logic [COUNTER_BITS-1:0] 	   counter_greycode_model;
   
   async_fifo_bintogcode
   #(
     /*AUTOINSTPARAM*/
     // Parameters
-    .SIGNAL_WIDTH			(COUNTER_SIZE))		 // Templated
+    .SIGNAL_WIDTH			(COUNTER_BITS))		 // Templated
   u_bintogcode_assert
   (
     /*AUTOINST*/
