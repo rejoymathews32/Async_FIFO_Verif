@@ -63,8 +63,11 @@ module async_fifo_flop_sync
 
   //--------------------------------------------------------------------
   // Assertions
+
+`ifdef ASSERT_ON
   // Assert that FLOP_CNT cannot be less than 2 or greater than 3
   assert(FLOP_CNT == 2 || FLOP_CNT ==3);
   else $error("Flop synchronizer should be configured for either 2 or 3 flops");
+`endif  
 
 endmodule
