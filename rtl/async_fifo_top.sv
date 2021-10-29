@@ -195,13 +195,26 @@ module async_fifo_top
   //----------------------------------------------------------------------------
   // Assertions
   //----------------------------------------------------------------------------
-
+`ifdef ASSERT_ON
+  
   // Check that FIFO does not overflow
   // If FIFO is full, then on the next cycle, the write pointer should remain the same
-  
+  property p_overflow;
+    @(posedge clk) fifo_full |=> (write_gcode_ptr == $past(write_gcode_ptr));    
+  endproperty
 
+  assert property(p_overflow);
+  else $error ("FIFO has overflowed");
+  
   // Check that FIFO does not underflow
   // If FIFO is empty, then on the next cycle, the read pointer should remain the same
+  property p_underflow;
+    @(posedge clk) fifo_empty |=> (read_gcode_ptr == $past(read_gcode_ptr));    
+  endproperty
+  
+  assert property(p_underflow);
+  else $error ("FIFO has underflowed");
 
+`endif
   
 endmodule
