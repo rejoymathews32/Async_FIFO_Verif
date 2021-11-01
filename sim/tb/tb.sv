@@ -106,9 +106,9 @@ module tb();
   
   // Set format - null ,scope, config_db_name, interface instance
   // Config DB can be thought of as a global space that maintains an associative array
-  uvm_config_db#(virtual asyn_fifo_write_if)::set(null,"uvm_test_top","write_if",write_if);
+  uvm_config_db#(virtual asyn_fifo_write_if)::set(null,"uvm_test_top","write_vif",write_if);
 
-  uvm_config_db#(virtual asyn_fifo_read_if)::set(null,"uvm_test_top","read_if",read_if);
+  uvm_config_db#(virtual asyn_fifo_read_if)::set(null,"uvm_test_top","read_vif",read_if);
 
   //Call the test - but passing run_test argument as test class name
   run_test("async_fifo_base_test");

@@ -40,11 +40,16 @@ function void c_async_fifo_env::build_phase(uvm_phase phase);
   write_agt = c_async_fifo_write_agt::type_id::create("write_agt", this);
   read_agt  = c_async_fifo_read_agt::type_id::create("read_agt", this);
   
-  // Get the virtual interfaces to the read and write interfaces and pass them down to the agents
-  if(!config_db#(virtual asyn_fifo_read_if)::get(this,"","read_vif", read_vif))
-    `uvm_fatal(get_type_name(),"read_vif is not avaiable in env")
-  
+  // Get the virtual interfaces write interfaces and pass them down to the write agent
   if(!config_db#(virtual asyn_fifo_write_if)::get(this,"","write_vif", write_vif))
     `uvm_fatal(get_type_name(),"write_vif is not avaiable in env")
+  
+  config_db#(virtual asyn_fifo_write_if)::set(this,"write_agt","write_vif",write_vif);
+
+  // Get the virtual interfaces read interfaces and pass them down to the agents
+  if(!config_db#(virtual asyn_fifo_read_if)::get(this,"","read_vif", read_vif))
+    `uvm_fatal(get_type_name(),"read_vif is not avaiable in env")
+
+  config_db#(virtual asyn_fifo_read_if)::set(this,"read_agt","read_vif",read_vif);
 
 endfunction
