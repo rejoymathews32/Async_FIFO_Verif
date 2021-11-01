@@ -1,7 +1,10 @@
 // Author - Rejoy Roy Mathews
 // Testbench for an asynchronous FIFO
+
 import uvm_pkg::*;
-import async_fifo_test_params::*;
+`include "uvm_macros.svh"
+
+import async_fifo_env_pkg::*;
 
 module tb();
 
@@ -47,7 +50,7 @@ module tb();
   //----------------------------------------------------------------------------
   // Clock and reset
   //----------------------------------------------------------------------------
-  // RRM - Fixme : Can we create interfaces for a clock
+  // RRM - Fixme : Can we create interfaces for a clock?
   // Then pass these to config DB and have different clock frequencies
   // Depending on the testcase
   // Current scenario -> write clock is twice as fast as the read clock

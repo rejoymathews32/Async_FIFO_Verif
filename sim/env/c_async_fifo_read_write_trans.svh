@@ -3,9 +3,9 @@
 // i.e (transactions into the FIFO and transactions out of the FIFO)
 
 // ------------------------------------------------------------------------------
-// Write sequence ---------------------------------------------------------------
+// Write transaction-------------------------------------------------------------
 // ------------------------------------------------------------------------------
-class c_async_fifo_write_trans extends uvm_sequence;
+class c_async_fifo_write_trans extends uvm_sequence_item;
   // Signals to be assigned to in the write sequence
   rand logic 		       write_fifo_push;
   rand logic [FIFO_DATA_WIDTH-1:0]  write_data;
@@ -29,16 +29,16 @@ function string c_async_fifo_read_trans::print_transaction();
 endfunction // print_transaction
 
 // ------------------------------------------------------------------------------
-// Read sequence ----------------------------------------------------------------
+// Read transaction--------------------------------------------------------------
 // ------------------------------------------------------------------------------
 
-class c_async_fifo_read_trans extends uvm_sequence;
+class c_async_fifo_read_trans extends uvm_sequence_item;
   // Signals to be assigned to in the read sequence  
   rand logic 		       read_fifo_pop;  
-  rand logic [FIFO_DATA_WIDTH-1:0]  read_data;
 
   // Signals to be assigned to in the DUT. Will be sent to the scoreboard
   logic read_fifo_empty;
+  logic [FIFO_DATA_WIDTH-1:0]  read_data;
   
   extern function new(string name = "c_async_fifo_read_trans");
   extern function string print_transaction();
