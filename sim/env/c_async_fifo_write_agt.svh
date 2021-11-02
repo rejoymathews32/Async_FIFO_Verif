@@ -7,7 +7,7 @@ class c_async_fifo_write_agt extends uvm_agent;
 
   c_async_fifo_write_drv write_drv;
   c_async_fifo_write_mon write_mon;
-  c_async_fifo_write_seq write_seq;
+  c_async_fifo_write_sqr write_sqr;
   
   virtual asyn_fifo_write_if write_vif;
   
@@ -28,7 +28,7 @@ function void c_async_fifo_write_agt::build_phase(uvm_phase phase);
   // Create the driver and the monitor in the build phase
   write_drv = c_async_fifo_write_drv::type_id::create("async_fifo_write_drv", this);
   write_mon = c_async_fifo_write_mon::type_id::create("async_fifo_write_mon", this);
-  write_seq = c_async_fifo_write_seq::type_id::create("async_fifo_write_seq", this);
+  write_sqr = c_async_fifo_write_sqr::type_id::create("async_fifo_write_sqr", this);
   
   // Get the virtual interfaces write interfaces and pass them down to the write driver and monitor  
   if(!config_db#(virtual asyn_fifo_write_if)::get(this,"","write_vif",write_vif))
@@ -36,7 +36,7 @@ function void c_async_fifo_write_agt::build_phase(uvm_phase phase);
 
   config_db#(virtual asyn_fifo_write_if)::set(this,"write_drv","write_vif",write_vif);
   config_db#(virtual asyn_fifo_write_if)::set(this,"write_mon","write_vif",write_vif);
-  config_db#(virtual asyn_fifo_write_if)::set(this,"write_seq","write_vif",write_vif);
+  config_db#(virtual asyn_fifo_write_if)::set(this,"write_sqr","write_vif",write_vif);
   
 endfunction // build_phase
 
@@ -44,7 +44,7 @@ endfunction // build_phase
 // Connect Phase
 function void c_async_fifo_write_agt::connect_phase(uvm_phase phase);
   // Connect the driver and the sequencer
-  write_drv.seq_item_port.connect(write_seq.seq_item_export);  
+  write_drv.seq_item_port.connect(write_sqr.seq_item_export);  
 endfunction
 
 
