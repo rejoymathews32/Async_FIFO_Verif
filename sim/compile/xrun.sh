@@ -1,10 +1,9 @@
 #!/bin/bash
 
 {
-    # module innovus 18.12.000
-
     bsub -app irun \
 	 -Ip xrun \
+	 -licqueue \
 	 -f build.f \
 	 -f files.f
 

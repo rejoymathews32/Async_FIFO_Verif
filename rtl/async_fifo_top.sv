@@ -28,9 +28,6 @@ module async_fifo_top
   localparam COUNTER_BITS = $clog2(FIFO_DEPTH) + 1;
 
   /*AUTOLOGIC*/
-  // Beginning of automatic wires (for undeclared instantiated-module outputs)
-  logic 			      read_fifo_full;
-  // End of automatics
   logic 			      write_en;
   logic [COUNTER_BITS-1:0] 	      read_gcode_ptr;
   logic [COUNTER_BITS-1:0] 	      read_gcode_ptr_wr_sync;
@@ -39,7 +36,9 @@ module async_fifo_top
   logic [COUNTER_BITS-1:0] 	      write_gcode_ptr_rd_sync;
   logic [$clog2(FIFO_DEPTH)-1:0]      write_memory_addr;
 
-  
+  genvar 			      i;
+
+
   assign write_en = write_fifo_push && !write_fifo_full;
 
   //----------------------------------------------------------------------------
@@ -50,12 +49,12 @@ module async_fifo_top
    .READ_COUNTER_BITS                (COUNTER_BITS),
    .\(.*\)                           (\1),
    .clk                              (read_clk),
-   .fifo_empty		        (read_fifo_full),
+   .fifo_empty		        (read_fifo_empty),
    .fifo_pop 		        (read_fifo_pop),
    .reset_n                          (read_reset_n),
 
    );
-   */
+   */ 
   async_fifo_flop_read_control
     #(
       /*AUTOINSTPARAM*/
@@ -67,9 +66,9 @@ module async_fifo_top
      // Outputs
      .read_memory_addr			(read_memory_addr),	 // Templated
      .read_gcode_ptr			(read_gcode_ptr),	 // Templated
-     .fifo_empty				(read_fifo_full),	 // Templated
+     .fifo_empty			(read_fifo_empty),	 // Templated
      // Inputs
-     .clk					(read_clk),		 // Templated
+     .clk				(read_clk),		 // Templated
      .reset_n				(read_reset_n),		 // Templated
      .fifo_pop				(read_fifo_pop),	 // Templated
      .write_gcode_ptr_rd_sync		(write_gcode_ptr_rd_sync)); // Templated
@@ -101,7 +100,7 @@ module async_fifo_top
      .write_gcode_ptr			(write_gcode_ptr),	 // Templated
      .fifo_full				(write_fifo_full),	 // Templated
      // Inputs
-     .clk					(write_clk),		 // Templated
+     .clk				(write_clk),		 // Templated
      .reset_n				(write_reset_n),	 // Templated
      .fifo_push				(write_fifo_push),	 // Templated
      .read_gcode_ptr_wr_sync		(read_gcode_ptr_wr_sync)); // Templated
@@ -136,65 +135,73 @@ module async_fifo_top
      // Inputs
      .write_clk				(write_clk),		 // Templated
      .write_en				(write_en),		 // Templated
-     .write_data				(write_data),		 // Templated
-     .write_addr				(write_memory_addr),	 // Templated
+     .write_data			(write_data),		 // Templated
+     .write_addr			(write_memory_addr),	 // Templated
      .read_addr				(read_memory_addr));	 // Templated
 
-  //----------------------------------------------------------------------------
-  // Read pointer sync in write clk domain
-  //----------------------------------------------------------------------------
-  /* async_fifo_flop_sync AUTO_TEMPLATE
-   (
-   .FLOP_CNT			     (SYNCHRONIZER_FLOPS),
-   .\(.*\)                           (\1),
-   .q                                (read_gcode_ptr_wr_sync),
-   .d                                (read_gcode_ptr),
-   .clk                              (write_clk),
-   .reset_n                          (write_reset_n),
-   );
-   */
-  async_fifo_flop_sync
-    #(
-      /*AUTOINSTPARAM*/
-      // Parameters
-      .FLOP_CNT				(SYNCHRONIZER_FLOPS))	 // Templated
-  u_async_fifo_flop_wr_domain_sync
-    (
-     /*AUTOINST*/
-     // Outputs
-     .q					(read_gcode_ptr_wr_sync), // Templated
-     // Inputs
-     .d					(read_gcode_ptr),	 // Templated
-     .clk				(write_clk),		 // Templated
-     .reset_n				(write_reset_n));	 // Templated
+  generate
 
-  //----------------------------------------------------------------------------
-  // Write pointer sync in read clk domain
-  //----------------------------------------------------------------------------
-  /* async_fifo_flop_sync AUTO_TEMPLATE
-   (
-   .FLOP_CNT			     (SYNCHRONIZER_FLOPS),
-   .\(.*\)                           (\1),
-   .q                                (write_gcode_ptr_rd_sync),
-   .d                                (write_gcode_ptr),
-   .clk                              (read_clk),
-   .reset_n                          (read_reset_n),
-   );
-   */
-  async_fifo_flop_sync
-    #(
-      /*AUTOINSTPARAM*/
-      // Parameters
-      .FLOP_CNT				(SYNCHRONIZER_FLOPS))	 // Templated
-  u_async_fifo_flop_rd_domain_sync
-    (
-     /*AUTOINST*/
-     // Outputs
-     .q					(write_gcode_ptr_rd_sync), // Templated
-     // Inputs
-     .d					(write_gcode_ptr),	 // Templated
-     .clk				(read_clk),		 // Templated
-     .reset_n				(read_reset_n));		 // Templated
+    for(i = 0; i < COUNTER_BITS; i++) begin
+
+      //----------------------------------------------------------------------------
+      // Read pointer sync in write clk domain
+      //----------------------------------------------------------------------------
+      /* async_fifo_flop_sync AUTO_TEMPLATE
+       (
+       .FLOP_CNT			     (SYNCHRONIZER_FLOPS),
+       .\(.*\)                           (\1),
+       .q                                (read_gcode_ptr_wr_sync[i]),
+       .d                                (read_gcode_ptr[i]),
+       .clk                              (write_clk),
+       .reset_n                          (write_reset_n),
+       );
+       */
+      async_fifo_flop_sync
+	    #(
+	      /*AUTOINSTPARAM*/
+	      // Parameters
+	      .FLOP_CNT			(SYNCHRONIZER_FLOPS))	 // Templated
+      u_async_fifo_flop_wr_domain_sync
+	    (
+	     /*AUTOINST*/
+	     // Outputs
+	     .q				(read_gcode_ptr_wr_sync[i]), // Templated
+	     // Inputs
+	     .d				(read_gcode_ptr[i]),	 // Templated
+	     .clk			(write_clk),		 // Templated
+	     .reset_n			(write_reset_n));	 // Templated
+
+      //----------------------------------------------------------------------------
+      // Write pointer sync in read clk domain
+      //----------------------------------------------------------------------------
+      /* async_fifo_flop_sync AUTO_TEMPLATE
+       (
+       .FLOP_CNT			     (SYNCHRONIZER_FLOPS),
+       .\(.*\)                           (\1),
+       .q                                (write_gcode_ptr_rd_sync[i]),
+       .d                                (write_gcode_ptr[i]),
+       .clk                              (read_clk),
+       .reset_n                          (read_reset_n),
+       );
+       */
+      async_fifo_flop_sync
+	#(
+	  /*AUTOINSTPARAM*/
+	  // Parameters
+	  .FLOP_CNT			(SYNCHRONIZER_FLOPS))	 // Templated
+      u_async_fifo_flop_rd_domain_sync
+	(
+	 /*AUTOINST*/
+	 // Outputs
+	 .q				(write_gcode_ptr_rd_sync[i]), // Templated
+	 // Inputs
+	 .d				(write_gcode_ptr[i]),	 // Templated
+	 .clk				(read_clk),		 // Templated
+	 .reset_n			(read_reset_n));		 // Templated
+
+    end
+
+  endgenerate
 
   //----------------------------------------------------------------------------
   // Assertions

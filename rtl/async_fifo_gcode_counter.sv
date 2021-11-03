@@ -114,7 +114,7 @@ module async_fifo_gcode_counter
   property p_counter_valid;
     @(posedge clk)
       disable iff (!reset_n)
-	counter_greycode_model == counter_greycode;
+	counter_greycode_model === counter_greycode;
   endproperty
   
   assert property (p_counter_valid);  

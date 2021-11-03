@@ -25,6 +25,8 @@ task c_async_fifo_write_seq::body();
     async_fifo_write_trans = c_async_fifo_write_trans::type_id::create("Async fifo write trans");
     start_item(async_fifo_write_trans);
     // Late randomization
+    assert (async_fifo_write_trans.randomize());
+
     finish_item(async_fifo_write_trans);    
   end
 endtask // body
@@ -53,6 +55,8 @@ task c_async_fifo_read_seq::body();
     async_fifo_read_trans = c_async_fifo_read_trans::type_id::create("Async fifo read trans");
     start_item(async_fifo_read_trans);
     // Late randomization
+    assert (async_fifo_read_trans.randomize());
+    
     finish_item(async_fifo_read_trans);    
   end
 endtask // body

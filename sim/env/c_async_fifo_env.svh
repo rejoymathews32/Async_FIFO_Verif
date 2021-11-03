@@ -52,5 +52,8 @@ function void c_async_fifo_env::build_phase(uvm_phase phase);
 
   uvm_config_db#(virtual async_fifo_read_if)::set(this,"read_agt","read_vif",read_vif);
 
+  `uvm_info(get_type_name(), $sformatf("build phase completed"), UVM_LOW)
+
+
 endfunction // build_phase
 

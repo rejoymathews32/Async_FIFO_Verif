@@ -19,9 +19,14 @@ function c_async_fifo_write_mon::new(string name = "c_async_fifo_write_mon", uvm
   super.new(name,parent);  
 endfunction // new
 
-function void c_async_fifo_write_mon::build_phase(uvm_phase phase);  
+function void c_async_fifo_write_mon::build_phase(uvm_phase phase);
+  write_ap = new("async_fifo_write_mon_ap", this);
+  
   if(!uvm_config_db#(virtual async_fifo_write_if)::get(this,"","write_vif",write_vif))
     `uvm_fatal(get_type_name(), "Write montior does not have access to write_vif")
+
+  `uvm_info(get_type_name(), $sformatf("build phase completed"), UVM_LOW)
+
 endfunction // build_phase
 
 task c_async_fifo_write_mon::run_phase(uvm_phase phase);

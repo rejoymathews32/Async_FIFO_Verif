@@ -37,6 +37,8 @@ function void c_async_fifo_write_agt::build_phase(uvm_phase phase);
   uvm_config_db#(virtual async_fifo_write_if)::set(this,"write_drv","write_vif",write_vif);
   uvm_config_db#(virtual async_fifo_write_if)::set(this,"write_mon","write_vif",write_vif);
   uvm_config_db#(virtual async_fifo_write_if)::set(this,"write_sqr","write_vif",write_vif);
+
+  `uvm_info(get_type_name(), $sformatf("build phase completed"), UVM_LOW)
   
 endfunction // build_phase
 
@@ -44,7 +46,9 @@ endfunction // build_phase
 // Connect Phase
 function void c_async_fifo_write_agt::connect_phase(uvm_phase phase);
   // Connect the driver and the sequencer
-  write_drv.seq_item_port.connect(write_sqr.seq_item_export);  
+  write_drv.seq_item_port.connect(write_sqr.seq_item_export);
+  `uvm_info(get_type_name(), $sformatf("connect phase completed"), UVM_LOW)
+
 endfunction // connect_phase
 
 

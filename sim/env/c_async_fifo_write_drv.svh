@@ -22,6 +22,9 @@ endfunction // new
 function void c_async_fifo_write_drv::build_phase(uvm_phase phase);  
   if(!uvm_config_db#(virtual async_fifo_write_if)::get(this,"","write_vif",write_vif))
     `uvm_fatal(get_type_name(), "Write driver does not have access to write_vif")
+
+  `uvm_info(get_type_name(), $sformatf("build phase completed"), UVM_LOW)
+
 endfunction // build_phase
 
 task c_async_fifo_write_drv::run_phase(uvm_phase phase);
@@ -30,6 +33,9 @@ task c_async_fifo_write_drv::run_phase(uvm_phase phase);
   forever begin
     // Get the next item from the sequencer
     seq_item_port.get_next_item(write_tr);
+    `uvm_info(get_type_name(), $sformatf("Next item received"), UVM_LOW)
+    `uvm_info(get_type_name(), $sformatf("Received item fifo_push : 0x%x write_data : 0x%08x", write_tr.write_fifo_push, write_tr.write_data), UVM_LOW)
+    
     
     @(posedge write_vif.write_clk);
 
