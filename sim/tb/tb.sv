@@ -2,7 +2,6 @@
 // Testbench for an asynchronous FIFO
 
 import uvm_pkg::*;
-`include "uvm_macros.svh"
 
 import async_fifo_env_pkg::*;
 
@@ -88,32 +87,33 @@ module tb();
   //----------------------------------------------------------------------------
 
   // Write Interface
-  asyn_fifo_write_if#(.FIFO_DATA_WIDTH(FIFO_DATA_WIDTH))
+  async_fifo_write_if#(.FIFO_DATA_WIDTH(FIFO_DATA_WIDTH))
   write_if
     (
      .write_clk(write_clk),
-     .write_reset_n(write_reset_n),     
+     .write_reset_n(write_reset_n)
      );
 
   // Read interface
-  asyn_fifo_read_if #(.FIFO_DATA_WIDTH(FIFO_DATA_WIDTH))
+  async_fifo_read_if #(.FIFO_DATA_WIDTH(FIFO_DATA_WIDTH))
   read_if
     (
      .read_clk(read_clk),
-     .read_reset_n(read_reset_n),     
+     .read_reset_n(read_reset_n)    
      );
 
   //----------------------------------------------------------------------------
   // UVM Configuration
   //----------------------------------------------------------------------------
-  
-  // Set format - null ,scope, config_db_name, interface instance
-  // Config DB can be thought of as a global space that maintains an associative array
-  uvm_config_db#(virtual asyn_fifo_write_if)::set(null,"uvm_test_top","write_vif",write_if);
 
-  uvm_config_db#(virtual asyn_fifo_read_if)::set(null,"uvm_test_top","read_vif",read_if);
+  initial begin
+    // Set format - null ,scope, config_db_name, interface instance
+    // Config DB can be thought of as a global space that maintains an associative array
+    uvm_config_db#(virtual async_fifo_write_if)::set(null,"uvm_test_top","write_vif",write_if);
 
-  //Call the test - but passing run_test argument as test class name
-  run_test("async_fifo_base_test");
+    uvm_config_db#(virtual async_fifo_read_if)::set(null,"uvm_test_top","read_vif",read_if);
 
+    //Call the test - but passing run_test argument as test class name
+    run_test("async_fifo_base_test");
+  end
 endmodule

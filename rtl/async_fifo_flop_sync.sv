@@ -33,7 +33,7 @@ module async_fifo_flop_sync
 	end
       end
       // Last flop of the synchronizer
-      else if (i = (FLOP_CNT-1)) begin
+      else if (i == (FLOP_CNT-1)) begin
 	always @(posedge clk, negedge reset_n) begin
 	  if(!reset_n) begin
 	    q <= 1'b0;
@@ -65,9 +65,12 @@ module async_fifo_flop_sync
   // Assertions
 
 `ifdef ASSERT_ON
-  // Assert that FLOP_CNT cannot be less than 2 or greater than 3
-  assert(FLOP_CNT == 2 || FLOP_CNT ==3);
-  else $error("Flop synchronizer should be configured for either 2 or 3 flops");
+  initial begin
+    // Assert that FLOP_CNT cannot be less than 2 or greater than 3
+    if (!(FLOP_CNT == 2 || FLOP_CNT == 3)) begin
+      $fatal(1, $sformatf("Flop synchronizer should be configured for either 2 or 3 flops"));
+    end
+  end
 `endif
 
 endmodule

@@ -2,6 +2,8 @@
 // This module defines the write and read transactions
 // i.e (transactions into the FIFO and transactions out of the FIFO)
 
+import uvm_pkg::*;
+
 // ------------------------------------------------------------------------------
 // Write transaction-------------------------------------------------------------
 // ------------------------------------------------------------------------------
@@ -16,7 +18,7 @@ class c_async_fifo_write_trans extends uvm_sequence_item;
   extern function new(string name = "c_async_fifo_write_trans");
   extern function string print_transaction();
 
-  `uvm_object_utils(c_async_fifo_write_trans);
+  `uvm_object_utils(c_async_fifo_write_trans)
   
 endclass // c_async_fifo_write_trans
 
@@ -24,8 +26,8 @@ function c_async_fifo_write_trans::new(string name = "c_async_fifo_write_trans")
   super.new(name);
 endfunction // new
 
-function string c_async_fifo_read_trans::print_transaction();
-  $strobe("Read transaction data - 0x%x push asserted - 0x%x", read_data, read_fifo_push);  
+function string c_async_fifo_write_trans::print_transaction();
+  $strobe("Read transaction data - 0x%x push asserted - 0x%x", write_data, write_fifo_push);  
 endfunction // print_transaction
 
 // ------------------------------------------------------------------------------
@@ -43,7 +45,7 @@ class c_async_fifo_read_trans extends uvm_sequence_item;
   extern function new(string name = "c_async_fifo_read_trans");
   extern function string print_transaction();
 
-  `uvm_object_utils(c_async_fifo_read_trans);
+  `uvm_object_utils(c_async_fifo_read_trans)
   
 endclass // c_async_fifo_read_trans
 

@@ -1,7 +1,7 @@
 // Author - Rejoy Roy Mathews
 // Defining an interface for the FIFO write channel
 
-interface asyn_fifo_write_if 
+interface async_fifo_write_if 
   #(parameter FIFO_DATA_WIDTH = 32)(
 				    input logic write_clk,
 				    input logic write_reset_n);

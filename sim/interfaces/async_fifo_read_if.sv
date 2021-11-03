@@ -1,7 +1,7 @@
 // Author - Rejoy Roy Mathews
 // Defining an interface for the FIFO read channel
 
-interface asyn_fifo_read_if 
+interface async_fifo_read_if 
   #(parameter FIFO_DATA_WIDTH = 32)(
 				    input logic read_clk,
 				    input logic read_reset_n);

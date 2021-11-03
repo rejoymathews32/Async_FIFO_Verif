@@ -8,9 +8,9 @@
 class c_async_fifo_write_seq extends uvm_sequence#(c_async_fifo_write_trans);
   
   extern function new(string name = "c_async_fifo_write_seq");
-  extern task void body();
+  extern task body();
   
-  `uvm_object_utils(c_async_fifo_write_seq);
+  `uvm_object_utils(c_async_fifo_write_seq)
   
 endclass // c_async_fifo_write_seq
 
@@ -18,7 +18,7 @@ function c_async_fifo_write_seq::new(string name = "c_async_fifo_write_seq");
   super.new(name);
 endfunction // new
 
-task void c_async_fifo_write_seq::body();
+task c_async_fifo_write_seq::body();
   c_async_fifo_write_trans async_fifo_write_trans;
   // Create 100 randon write transactions and send to the FIFO
   repeat(100) begin    
@@ -27,7 +27,7 @@ task void c_async_fifo_write_seq::body();
     // Late randomization
     finish_item(async_fifo_write_trans);    
   end
-endtask // body  
+endtask // body
 
 // ------------------------------------------------------------------------------
 // Read sequence ----------------------------------------------------------------
@@ -36,9 +36,9 @@ endtask // body
 class c_async_fifo_read_seq extends uvm_sequence#(c_async_fifo_read_trans);
   
   extern function new(string name = "c_async_fifo_read_seq");
-  extern task void body();
+  extern task body();
 
-  `uvm_object_utils(c_async_fifo_read_seq);
+  `uvm_object_utils(c_async_fifo_read_seq)
   
 endclass // c_async_fifo_read_seq
 
@@ -46,7 +46,7 @@ function c_async_fifo_read_seq::new(string name = "c_async_fifo_read_seq");
   super.new(name);
 endfunction // new
 
-task void c_async_fifo_read_seq::body();
+task c_async_fifo_read_seq::body();
   c_async_fifo_read_trans async_fifo_read_trans;
   // Create 100 randon read transactions and send to the FIFO
   repeat(100) begin    
@@ -56,3 +56,4 @@ task void c_async_fifo_read_seq::body();
     finish_item(async_fifo_read_trans);    
   end
 endtask // body
+

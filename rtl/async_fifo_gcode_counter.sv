@@ -13,7 +13,7 @@ module async_fifo_gcode_counter
    input logic 			   counter_incr, // control signal to increament the counter
    input logic 			   counter_en, // control signal to enable the counter
    input logic 			   clk, // clock
-   input logic 			   reset_n // reset
+   input logic 			   reset_n, // reset
    output logic [COUNTER_BITS-2:0] memory_addr, // memory access address
    output logic [COUNTER_BITS-1:0] gcode_ptr // grey code pointer
    );
@@ -110,8 +110,14 @@ module async_fifo_gcode_counter
    // Inputs
    .binary				(counter_binary));	 // Templated
 
-  assert(counter_greycode_model == counter_greycode);  
-  else $error("Greycode coversion failed");  
+
+  property p_counter_valid;
+    @(posedge clk)
+      disable iff (!reset_n)
+	counter_greycode_model == counter_greycode;
+  endproperty
+  
+  assert property (p_counter_valid);  
   
 `endif  
 endmodule

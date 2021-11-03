@@ -3,13 +3,13 @@
 
 class c_async_fifo_write_mon extends uvm_monitor;
 
-  virtual asyn_fifo_write_if write_vif;
+  virtual async_fifo_write_if write_vif;
   uvm_analysis_port #(c_async_fifo_write_trans) write_ap;
   c_async_fifo_write_trans write_tr;
   
   extern function new (string name = "c_async_fifo_write_mon", uvm_component parent = null);
   extern function void build_phase(uvm_phase phase);
-  extern task void run_phase(uvm_phase phase);
+  extern task run_phase(uvm_phase phase);
 
   `uvm_component_utils(c_async_fifo_write_mon)
   
@@ -20,11 +20,11 @@ function c_async_fifo_write_mon::new(string name = "c_async_fifo_write_mon", uvm
 endfunction // new
 
 function void c_async_fifo_write_mon::build_phase(uvm_phase phase);  
-  if(!config_db#(virtual asyn_fifo_write_if)::get(this,"","write_vif",write_vif))
+  if(!uvm_config_db#(virtual async_fifo_write_if)::get(this,"","write_vif",write_vif))
     `uvm_fatal(get_type_name(), "Write montior does not have access to write_vif")
 endfunction // build_phase
 
-task void c_async_fifo_write_mon::run_phase(uvm_phase phase);
+task c_async_fifo_write_mon::run_phase(uvm_phase phase);
   write_tr = c_async_fifo_write_trans::type_id::create("c_async_fifo_write_trans");  
   forever begin
     @(posedge write_vif.write_clk);
