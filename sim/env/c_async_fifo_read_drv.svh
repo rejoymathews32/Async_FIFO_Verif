@@ -29,18 +29,20 @@ endfunction // build_phase
 
 task c_async_fifo_read_drv::run_phase(uvm_phase phase);
   read_tr = c_async_fifo_read_trans::type_id::create("c_async_fifo_read_trans");
+  
+  wait(read_vif.read_reset_n == 1'b1);
 
   forever begin
     // Get the next item from the sequencer
     seq_item_port.get_next_item(read_tr);
-    `uvm_info(get_type_name(), $sformatf("Next item received"), UVM_LOW)
-    `uvm_info(get_type_name(), $sformatf("Received item fifo_pop : 0x%x read_data : 0x%08x", read_tr.read_fifo_pop, read_tr.read_data), UVM_LOW)
     
     @(posedge read_vif.read_clk);
 
     // Driver signals on the virtual interface
     read_vif.read_fifo_pop <= read_tr.read_fifo_pop;
 
+    `uvm_info(get_type_name(), $sformatf("Received item fifo_pop : 0x%x read_data : 0x%08x", read_tr.read_fifo_pop, read_vif.read_data), UVM_LOW)
+        
     // Update the sequencer that the driver has completed current item    
     seq_item_port.item_done();
   end

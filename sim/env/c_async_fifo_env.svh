@@ -7,6 +7,8 @@
 // The evironment class accesses the read and write interfaces from the global space
 // and passes it to the agents
 
+// A scoreboard is defined that is responsible for checking appropriate FIFO updates
+
 // Defining a constructor, build phase, connect phase, reset phase, run phase, 
 
 class c_async_fifo_env extends uvm_env;
@@ -14,11 +16,13 @@ class c_async_fifo_env extends uvm_env;
   // Instantiate the FIFO read and write agent
   c_async_fifo_write_agt write_agt;
   c_async_fifo_read_agt read_agt;
-
+  c_async_fifo_scoreboard scoreboard;
+  
   // Class method prototypes
   extern function new(string name = "async_fifo_env", uvm_component parent = null);
   extern function void build_phase(uvm_phase phase);
-
+  extern function void connect_phase(uvm_phase phase);
+  
   // Virtual read and write interfaces
   virtual async_fifo_write_if write_vif;
   virtual async_fifo_read_if read_vif;
@@ -35,6 +39,8 @@ endfunction
 
 // Build Phase
 function void c_async_fifo_env::build_phase(uvm_phase phase);
+  // Construct the scoreboard
+  scoreboard = c_async_fifo_scoreboard::type_id::create("scoreboard", this);
 
   // Construct the agents
   write_agt = c_async_fifo_write_agt::type_id::create("write_agt", this);
@@ -56,4 +62,15 @@ function void c_async_fifo_env::build_phase(uvm_phase phase);
 
 
 endfunction // build_phase
+
+// Connect Phase
+function void c_async_fifo_env::connect_phase(uvm_phase phase);
+  
+  // Connect the appropriate analysis ports to the scoreboard
+  write_agt.write_mon.write_ap.connect(scoreboard.fifo_write_fifo_imp);  
+  read_agt.read_mon.read_ap.connect(scoreboard.fifo_read_fifo_imp);  
+  
+endfunction // connect_phase
+
+    
 

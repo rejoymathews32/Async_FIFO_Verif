@@ -52,10 +52,12 @@ task async_fifo_base_test::run_phase(uvm_phase phase);
   
   phase.raise_objection(this, "Starting read and write sequences on the FIFO");  
   // Start read and write transactions on the FIFO in parallel
+
   fork
     write_seq.start(env.write_agt.write_sqr);
     read_seq.start(env.read_agt.read_sqr);    
-  join
+  join  
+    
   phase.drop_objection(this, "Finished read and write sequences on the FIFO");
   
 endtask // run_phase

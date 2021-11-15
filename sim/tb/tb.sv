@@ -70,8 +70,6 @@ module tb();
 
   // Reset
   initial begin
-    write_reset_n <= 1'b1;
-    #100;
     // Reset the FIFO
     write_reset_n <= 1'b0;
     #100;

@@ -22,6 +22,9 @@ package async_fifo_env_pkg;
 `include "c_async_fifo_read_drv.svh"
 `include "c_async_fifo_read_agt.svh"
 
+// Scoreboard
+`include "c_async_fifo_scoreboard.svh"
+  
   // Environment  
 `include "c_async_fifo_env.svh"
 

@@ -28,21 +28,26 @@ function void c_async_fifo_write_drv::build_phase(uvm_phase phase);
 endfunction // build_phase
 
 task c_async_fifo_write_drv::run_phase(uvm_phase phase);
-  write_tr = c_async_fifo_write_trans::type_id::create("c_async_fifo_write_trans");
+  write_tr 		       = c_async_fifo_write_trans::type_id::create("c_async_fifo_write_trans");
 
+  // Wait for write interface to come out of reset.
+  // RRM - FIXME : Should reset be handled in the tb.sv or should we have a separate sequence
+  // Currently handled in tb.sv
+  wait(write_vif.write_reset_n == 1'b1);
+  
   forever begin
     // Get the next item from the sequencer
     seq_item_port.get_next_item(write_tr);
-    `uvm_info(get_type_name(), $sformatf("Next item received"), UVM_LOW)
-    `uvm_info(get_type_name(), $sformatf("Received item fifo_push : 0x%x write_data : 0x%08x", write_tr.write_fifo_push, write_tr.write_data), UVM_LOW)
-    
-    
+        
     @(posedge write_vif.write_clk);
 
     // Driver signals on the virtual interface
     write_vif.write_fifo_push <= write_tr.write_fifo_push;
     write_vif.write_data <= write_tr.write_data;
 
+    `uvm_info(get_type_name(), $sformatf("Received item fifo_push : 0x%x write_data : 0x%08x", write_tr.write_fifo_push, write_tr.write_data), UVM_LOW)
+    
+    
     // Update the sequencer that the driver has completed current item    
     seq_item_port.item_done();
   end
